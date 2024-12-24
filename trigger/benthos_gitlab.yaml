@@ -1,0 +1,35 @@
+input:
+  http_server:
+    address: ""
+    path: /hook
+    allowed_verbs: [ POST ]
+    timeout: 30m
+
+pipeline:
+  processors:
+    - bloblang: |
+        root = { 
+          "inputs": {
+            "payload": content().string()
+          },
+          "response_mode": "blocking",
+          "user": "AiCodeReview" 
+        }
+    - log:
+        level: INFO
+        message: "Processing GitLab hook request"
+
+output:
+  http_client:
+    url: ${! metadata("dify") }
+    verb: POST
+    headers:
+      Authorization: 'Bearer ${! metadata("X-Gitlab-Token") }'
+      Content-Type: application/json
+    timeout: "30m" # 超时时间设置为30分钟
+logger:
+  level: INFO
+  format: logfmt
+  add_timestamp: false
+  static_fields:
+    '@service': ai-code-reviewer-trigger-connect
