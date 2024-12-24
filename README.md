@@ -79,6 +79,7 @@ docker run --restart=always -d \
   --name gitlab-mr-reviewer-trigger \
   -e DIFY_URL=<your-dify-workflow-url> \
   -e DIFY_API_KEY=<your-dify-api-key> \
+  -p 4195:4195
   gitlab-mr-reviewer-trigger
 ```
 

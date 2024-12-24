@@ -1,7 +1,7 @@
 input:
   http_server:
     address: ""
-    path: /hook
+    path: /
     allowed_verbs: [ POST ]
     timeout: 30m
 
@@ -26,10 +26,12 @@ output:
     headers:
       Authorization: 'Bearer ${! metadata("X-Gitlab-Token") }'
       Content-Type: application/json
-    timeout: "30m" # 超时时间设置为30分钟
+    timeout: 30m
+    propagate_response: true
+
 logger:
   level: INFO
   format: logfmt
-  add_timestamp: false
+  add_timestamp: true
   static_fields:
     '@service': ai-code-reviewer-trigger-connect
