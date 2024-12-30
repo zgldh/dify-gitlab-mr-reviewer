@@ -1,0 +1,33 @@
+input:
+  http_server:
+    address: ""
+    path: /
+    allowed_verbs: [ POST ]
+
+pipeline:
+  processors:
+    - log:
+        level: DEBUG
+        message: "Received GitLab hook request"
+    - bloblang: |
+        root = {
+          "timestamp": timestamp_unix(),
+          "headers": meta(),
+          "body": content().string()
+        }
+    - log:
+        level: INFO
+        message: "Storing GitLab hook request"
+
+output:
+  file:
+    path: "/app/requests/request_${! timestamp_unix() }.json"
+    codec: lines
+
+logger:
+  level: DEBUG
+  format: json
+  add_timestamp: true
+  static_fields:
+    '@service': gitlab-hook-receiver
+    'component': 'receiver'
