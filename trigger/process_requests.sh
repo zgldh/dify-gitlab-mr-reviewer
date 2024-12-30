@@ -3,6 +3,7 @@
 # Configuration
 REQUESTS_DIR="/app/requests"
 LOG_FILE="process_requests.log"
+TIMEOUT="${DIFY_TIMEOUT:-1800}"
 
 # Logging function
 log() {
@@ -31,6 +32,7 @@ process_requests() {
             
             # Send to Dify
             response=$(curl -s -X POST "$dify_url" \
+                -m "$TIMEOUT" \
                 -H "Authorization: Bearer $auth_token" \
                 -H "Content-Type: application/json" \
                 -d "$payload")
