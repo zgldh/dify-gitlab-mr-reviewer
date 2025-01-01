@@ -15,114 +15,84 @@ Before you begin, ensure you have the following installed:
 
 - [GitLab](https://about.gitlab.com/) This reviewer can be applied to free GitLab instance. You need a personal access token to an account with access (Role `developer` at least) to the repository.
 - [Dify](https://github.com/langgenius/dify) The AI workflow platform. You have to get the workflow URL and access token.
-- [Docker](https://www.docker.com/) Optional. If not, you can call the Dify workflow API by yourself.
+- [Docker](https://www.docker.com/) To proxy the GitLab system hook requests to Dify
 
 ## Installation
 
 ### 1. Get the GitLab Personal Access Token
 
-![Get the GitLab Personal Access Token Steps](image-1.png)
+![Get the GitLab Personal Access Token Steps](docs/image-1.png)
 
 Please note the token must have the `api` scope. This GitLab account will post comments when reviewing MRs. So please remember the GitLab account name.
+
+The token will be used as `GITLAB_PRIVATE_TOKEN` and the account name will be used as `GITLAB_REVIEWER_USERNAME`.
 
 ### 2. Import the workflow into Dify
 
 Select the file `dify-workflow.yml` to import.
 
-![How to import the workflow](image-3.png)
+![How to import the workflow](docs/image-3.png)
 
 Then adjust your workflow environment variables.
 
-![Dify workflow environment variables](image-2.png)
+![Dify workflow environment variables](docs/image-2.png)
 
-Sample:  
+Sample:
 
 ```
 GITLAB_HOST = https://gitlab.your-company.com
 GITLAB_PRIVATE_TOKEN = <The token you retrived from the first step>
+GITLAB_REVIEWER_USERNAME = <The GitLab account name you retrived from the first step>
 ```
 
-The workflow is default using the [**Google Gemini 2.0 Flash Exp**](https://aistudio.google.com/apikey). You can change to any other LLM model.
+> The workflow is default using the [**Google Gemini 2.0 Flash Exp**](https://aistudio.google.com/apikey). You can change to any other LLM model.
 
-### 3. Refer the reviewer account from the MR description
-
-Still remember the GitLab account name? Just @ the reviewer account in the MR description. And save it.
-
-![Refer to the reviewer](image.png)
-
-### 4. (Optional) Get Dify URL and API Key
+### 3. Note down the URL and Key from Dify workflow
 
 This is for autommatically trigger the workflow.  
 Get the workflow URL, it will be refered as `DIFY_URL` in following steps. It looks like:
 
 ```
 https://your-dify-host/v1/workflows/run
-```  
+```
 
 And the API key from the workflow page, it will be refered as `DIFY_API_KEY` in follwoing steps:
-![The Dify API Key](image-4.png)
+![The Dify API Key](docs/image-4.png)
 
 You will need the URL and API key to trigger the workflow.
 
-### 5. (Optional) The Trigger Script Setup
+### 4. Setup the trigger service.
 
-**Build the Docker Image**:
+Build the docker image:
 
-   ```sh
-   docker build -t gitlab-mr-reviewer-trigger .
-   ```
+```sh
+cd trigger
+docker build -t gitlab-mr-reviewer .
+```
 
-**Run the Docker Container**:
+Run the docker container. The host should be accessible from the GitLab server.
 
-   ```sh
-   docker run --restart=always -d \
-     --name gitlab-mr-reviewer-trigger \
-     -e DIFY_URL=<your-dify-workflow-url> \
-     -e DIFY_API_KEY=<your-dify-api-key> \
-     gitlab-mr-reviewer-trigger
-   ```
+```sh
+docker run --name ai-code-review-trigger -d --restart always -p 4195:4195 -v $(pwd)/logs:/var/log/supervisor/ gitlab-mr-reviewer
+```
 
-### 6. (Optional) Trigger the Workflow manually
+Your GitLab server should be able to access this 4195 port. For example `http://localhost:4195`.
 
-If you don't trigger the workflow automatically, you can just click the run button in the workflow page for each time you want to trigger it. Each run will review one MR.
+### 5. Setup a System Hook to GitLab
 
-![Manually run the workflow](image-5.png)
+Go to your GitLab admin area, navigate to `System hooks > Add new webhook`.
 
-### 7. Done
+Fill up the **URL** as `http://localhost:4195/hook?dify=<DIFY_URL>`
 
-Take a break and see what the AI has to say!
+Fill up the **Secret token** as `<DIFY_API_KEY>` (it will be masked as ***)
 
-## Environment Variables
+Triggers should be `Merge request events` only.
 
-The following environment variables are required for the script to function correctly:
+Then click `Add webhook` to save the settings.
 
-| Name               | Description                                                                 | Default |
-|--------------------|-----------------------------------------------------------------------------|---------|
-| `DIFY_URL`         | The URL of the Dify workflow. <br>For example: `https://your-dify-host/v1/workflows/run` | `null`  |
-| `DIFY_API_KEY`     | The API key to the Dify workflow.                                           | `null`  |
-| `DIFY_MAX_RETRIES` | Max retries to access the Dify API.                                         | `3`     |
-| `DIFY_TIMEOUT`     | The timeout in seconds to run the workflow.                                 | `1800`  |
-| `DIFY_MIN_INTERVAL`| Minimum interval in seconds between each API call.                          | `60`    |
+### 6. Done
 
-## Trigger Script Logging
-
-The script logs all activities to the `logs` directory. The log files are named `dify_monitor.log`. The logs include detailed information about the script's operation, including:
-
-- **INFO**: General information about the script's operation.
-- **WARN**: Warnings that do not necessarily indicate an error.
-- **ERROR**: Errors that may require attention.
-
-## Workflow Configuration
-
-The workflow configuration is defined in the `dify-workflow.yml` file. It is exported from Dify. I don't recommend to change it manually, but just modify it from Dify and export a new one if you need to.
-
-## Trigger Script
-
-The `trigger.sh` script is responsible for monitoring the Dify workflow and handling the interaction with the GitLab API. It includes functions for logging, reading configuration, prettifying JSON output, and monitoring the Dify Workflow.
-
-## Dockerfile
-
-The `Dockerfile` sets up a Docker container with the necessary dependencies (`curl`, `jq`, `bc`) and runs the `trigger.sh` script. This containerization ensures that the monitoring script can be run in a consistent environment across different systems.
+That's all settings. You can try to create a new merge request and see what the AI would say!
 
 ## Contributing
 
