@@ -15,7 +15,7 @@ Before you begin, ensure you have the following installed:
 
 - [GitLab](https://about.gitlab.com/) This reviewer can be applied to free GitLab instance. You need a personal access token to an account with access (Role `developer` at least) to the repository.
 - [Dify](https://github.com/langgenius/dify) The AI workflow platform. You have to get the workflow URL and access token.
-- [Docker](https://www.docker.com/) To proxy the GitLab system hook requests to Dify, or run a cronjob to trigger the Dify workflow.
+- [Docker](https://www.docker.com/) To proxy the GitLab system hook requests to Dify
 
 ## Installation
 
@@ -24,6 +24,8 @@ Before you begin, ensure you have the following installed:
 ![Get the GitLab Personal Access Token Steps](docs/image-1.png)
 
 Please note the token must have the `api` scope. This GitLab account will post comments when reviewing MRs. So please remember the GitLab account name.
+
+The token will be used as `GITLAB_PRIVATE_TOKEN` and the account name will be used as `GITLAB_REVIEWER_USERNAME`.
 
 ### 2. Import the workflow into Dify
 
@@ -40,17 +42,12 @@ Sample:
 ```
 GITLAB_HOST = https://gitlab.your-company.com
 GITLAB_PRIVATE_TOKEN = <The token you retrived from the first step>
+GITLAB_REVIEWER_USERNAME = <The GitLab account name you retrived from the first step>
 ```
 
-The workflow is default using the [**Google Gemini 2.0 Flash Exp**](https://aistudio.google.com/apikey). You can change to any other LLM model.
+> The workflow is default using the [**Google Gemini 2.0 Flash Exp**](https://aistudio.google.com/apikey). You can change to any other LLM model.
 
-// TODO remember the workflow URL and API key
-
-### 3. Setup a System Hook to GitLab
-
-// TODO
-
-### 4. Setup the trigger service.
+### 3. Note down the URL and Key from Dify workflow
 
 This is for autommatically trigger the workflow.  
 Get the workflow URL, it will be refered as `DIFY_URL` in following steps. It looks like:
@@ -64,34 +61,38 @@ And the API key from the workflow page, it will be refered as `DIFY_API_KEY` in 
 
 You will need the URL and API key to trigger the workflow.
 
-### 5. (Optional) The Trigger Script Setup
+### 4. Setup the trigger service.
 
-**Build the Docker Image**:
-
-```sh
-docker build -t gitlab-mr-reviewer-trigger .
-```
-
-**Run the Docker Container**:
+Build the docker image:
 
 ```sh
-docker run --restart=always -d \
-  --name gitlab-mr-reviewer-trigger \
-  -e DIFY_URL=<your-dify-workflow-url> \
-  -e DIFY_API_KEY=<your-dify-api-key> \
-  -p 4195:4195
-  gitlab-mr-reviewer-trigger
+cd trigger
+docker build -t gitlab-mr-reviewer .
 ```
 
-### 6. (Optional) Trigger the Workflow manually
+Run the docker container. The host should be accessible from the GitLab server.
 
-If you don't trigger the workflow automatically, you can just click the run button in the workflow page for each time you want to trigger it. Each run will review one MR.
+```sh
+docker run --name ai-code-review-trigger -d --restart always -p 4195:4195 -v $(pwd)/logs:/var/log/supervisor/ gitlab-mr-reviewer
+```
 
-![Manually run the workflow](docs/image-5.png)
+Your GitLab server should be able to access this 4195 port. For example `http://localhost:4195`.
 
-### 7. Done
+### 5. Setup a System Hook to GitLab
 
-Take a break and see what the AI has to say!
+Go to your GitLab admin area, navigate to `System hooks > Add new webhook`.
+
+Fill up the **URL** as `http://localhost:4195/hook?dify=<DIFY_URL>`
+
+Fill up the **Secret token** as `<DIFY_API_KEY>` (it will be masked as ***)
+
+Triggers should be `Merge request events` only.
+
+Then click `Add webhook` to save the settings.
+
+### 6. Done
+
+That's all settings. You can try to create a new merge request and see what the AI would say!
 
 ## Contributing
 
