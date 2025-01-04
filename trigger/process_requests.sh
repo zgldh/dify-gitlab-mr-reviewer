@@ -37,12 +37,13 @@ process_requests() {
                 -H "Content-Type: application/json" \
                 -d "$payload" \
                 -w "\n%{http_code}")
+            curl_exit_code=$?
             status_code=$(echo "$response" | tail -n1)
             response=$(echo "$response" | sed '$d')
             
             # Check response
-            if [[ $status_code -eq 0 || $status_code -eq 28 ]]; then
-                if [[ $status_code -eq 0 ]]; then
+            if [[ $curl_exit_code -eq 0 || $curl_exit_code -eq 28 ]]; then
+                if [[ $curl_exit_code -eq 0 ]]; then
                     log "INFO" "Successfully processed $request_file"
                 else
                     log "WARNING" "Request timed out for $request_file"
