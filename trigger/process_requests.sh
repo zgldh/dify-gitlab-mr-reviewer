@@ -31,16 +31,22 @@ process_requests() {
             payload=$(jq -c '{inputs: {payload: .|tostring}, response_mode: "blocking", user: "AiCodeReview"}' <<< "$body")
             
             # Send to Dify
-            response=$(curl -s -X POST "$dify_url" \
+            response=$(curl -i -s -X POST "$dify_url" \
                 -m "$TIMEOUT" \
                 -H "Authorization: Bearer $auth_token" \
                 -H "Content-Type: application/json" \
-                -d "$payload")
-            status_code=$?
+                -d "$payload" \
+                -w "\n%{http_code}")
+            status_code=$(echo "$response" | tail -n1)
+            response=$(echo "$response" | sed '$d')
             
             # Check response
-            if [[ $status_code -eq 0 ]]; then
-                log "INFO" "Successfully processed $request_file"
+            if [[ $status_code -eq 0 || $status_code -eq 28 ]]; then
+                if [[ $status_code -eq 0 ]]; then
+                    log "INFO" "Successfully processed $request_file"
+                else
+                    log "WARNING" "Request timed out for $request_file"
+                fi
                 rm "$request_file"
             else
                 log "ERROR" "Failed to process $request_file. Response: $response"
