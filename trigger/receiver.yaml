@@ -11,7 +11,7 @@ pipeline:
         message: "Received GitLab hook request"
     - bloblang: |
         root = {
-          "timestamp": timestamp_unix(),
+          "timestamp": timestamp_unix_nano(),
           "headers": meta(),
           "body": content().string()
         }
@@ -21,7 +21,7 @@ pipeline:
 
 output:
   file:
-    path: "/app/requests/request_${! timestamp_unix() }.json"
+    path: "/app/requests/request_${! timestamp_unix_nano() }.json"
     codec: lines
 
 logger:
