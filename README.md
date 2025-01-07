@@ -30,7 +30,7 @@ The token will be used as `GITLAB_PRIVATE_TOKEN` and the account name will be us
 
 ### 2. Import the workflow into Dify
 
-Select the file `dify-workflow.yml` to import.
+Select the file `dify-workflow-zh.yml` to import. Or you can import the English version `dify-workflow-en.yml`.  
 
 ![How to import the workflow](docs/image-3.png)
 
