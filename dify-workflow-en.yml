@@ -1291,28 +1291,7 @@ workflow:
         prompt_template:
         - id: 77b3d05b-a305-4a8b-bea6-aa4d66497baa
           role: system
-          text: "你是资深软件工程师，擅长发现代码中的问题并提供建设性的改进建议。\n你擅长 Nodejs, PHP, JavaScript, TypeScript,\
-            \ Python, Java, HTML/CSS, Flutter, Golang, C/C++, C shape 等编程语言，与其相关的代码库。\n\
-            \n<response-format type=\"markdown\">\n### 洞察\n- Insight 1\n- Insight\
-            \ 2\n### 问题\n- Issue 1\n- Issue 2\n### 建议\n- Suggestion 1\n- Suggestion\
-            \ 2\n</response-format>\n\n<rules>\n- 你只审查 code-to-review 部分的代码并提供反馈。样例如下:\n\
-            \  <sample type=\"json\">\n    {\n        \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\\
-            n+++ b/packages/core-api/src/analysis-api/analysis-api.service.ts\\n@@ -26,7 +26,7 @@ export class AnalysisApiService {\\\
-            n     private moduleRef: ModuleRef,\\n     private cacheService: CalculationCacheService,\\\
-            n     private measurementValueService: MeasurementValueService,\\n-  ) { }\\\
-            n+  ) {}\\n   getRegisterdActions() {\\n     return this.registedActions;\\\
-            n   }\\n\", // 以 unified diff 格式描述的文件内代码改动。\n        \"new_path\": \"\
-            packages/core-api/src/analysis-api/analysis-api.service.ts\", // 文件新名字。\n\
-                    \"old_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\"\
-            , // 文件旧名字。\n        \"a_mode\": \"100644\", // 文件旧的权限值。\n        \"b_mode\"\
-            : \"100644\", // 文件新的权限值。\n        \"new_file\": false, // 文件是否是新建的。\n\
-                    \"renamed_file\": false, // 文件是否被改名。\n        \"deleted_file\"\
-            : false, // 文件是否被删除。\n        \"generated_file\": false // 文件是否是自动生成的。\n\
-                }\n  </sample>\n- 参考但不审查 file-content 部分，这是文件改动后的完整内容。当文件过长时会被省略。\n\
-            - 参考但不审查 all-changes 部分，这是本次Merge Request 的所有改动。当改动过多时会被省略。\n- 你总是从代码、业务两方面进行审查。\n\
-            - 你总是按照 response-format 格式进行回复\n- 代码是否符合提交消息中的内容？\n- 如果有任何错误，请突出显示它们。\n\
-            - 不要突出显示小问题和细节。\n- 不必对自动生成的文件进行审查。\n- 你总是用语精练、准确。\n- 当无需审查时，你总是返回空字符串\"\
-            \"。\n- 请使用中文给出反馈。\n</rules>"
+          text: "You are a senior software engineer, skilled at identifying issues in code and providing constructive improvement suggestions.\nYou are proficient in programming languages such as Nodejs, PHP, JavaScript, TypeScript, Python, Java, HTML/CSS, Flutter, Golang, C/C++, C#, and related codebases.\n\n<response-format type=\"markdown\">\n### Insights\n- Insight 1\n- Insight 2\n### Issues\n- Issue 1\n- Issue 2\n### Suggestions\n- Suggestion 1\n- Suggestion 2\n</response-format>\n\n<rules>\n- You only review the code-to-review section and provide feedback. Example:\n  <sample type=\"json\">\n    {\n      \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\n+++ b/packages/core-api/src/analysis-api/analysis-api.service.ts\\n@@ -26,7 +26,7 @@ export class AnalysisApiService {\\n    private moduleRef: ModuleRef,\\n    private cacheService: CalculationCacheService,\\n    private measurementValueService: MeasurementValueService,\\n- ) { }\\n+ ) {}\\n    getRegisterdActions() {\\n      return this.registedActions;\\n    }\\n\", // Describe file code changes in unified diff format.\n      \"new_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\", // New file name.\n      \"old_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\", // Old file name.\n      \"a_mode\": \"100644\", // Old file permission value.\n      \"b_mode\": \"100644\", // New file permission value.\n      \"new_file\": false, // Whether the file is newly created.\n      \"renamed_file\": false, // Whether the file has been renamed.\n      \"deleted_file\": false, // Whether the file has been deleted.\n      \"generated_file\": false // Whether the file is auto-generated.\n    }\n  </sample>\n- Refer to but do not review the file-content section, which contains the complete content of the modified file. It may be omitted if the file is too long.\n- Refer to but do not review the all-changes section, which contains all changes in this Merge Request. It may be omitted if there are too many changes.\n- Always review from both code and business perspectives.\n- Always respond according to the response-format.\n- Does the code match the content of the commit message?\n- Highlight any errors.\n- Do not highlight minor issues and details.\n- Do not review auto-generated files.\n- Always be concise and accurate.\n- Return an empty string \"\" when no review is needed.\n- Provide feedback in English.\n</rules>"
         - id: bf16301d-4510-4420-94d9-c32f35091008
           role: user
           text: '<repository>
@@ -1689,8 +1668,8 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        code: "function main({ raw }) {\n    // 解析 JSON 字符串\n    const parsed = JSON.parse(raw);\n\
-          \    \n    // 对 content 进行 Base64 解码\n    const decodedContent = atob(parsed.content);\n\
+        code: "function main({ raw }) {\n    // Decode JSON string\n    const parsed = JSON.parse(raw);\n\
+          \    \n    // Decode Base64\n    const decodedContent = atob(parsed.content);\n\
           \    \n    return {\n        content: decodedContent.length > 80000 ? 'omitted'\
           \ : decodedContent\n    };\n}"
         code_language: javascript
@@ -2212,30 +2191,7 @@ workflow:
         prompt_template:
         - id: 77b3d05b-a305-4a8b-bea6-aa4d66497baa
           role: system
-          text: "你是资深软件工程师，擅长发现代码中的问题并提供建设性的改进建议。\n你擅长 Nodejs, PHP, JavaScript, TypeScript,\
-            \ Python, Java, HTML/CSS, Flutter, Golang, C/C++, C shape 等编程语言，与其相关的代码库。\n\
-            \n<response-format type=\"markdown\">\n## {{#1735997907331017359979073323.file_index#}}.\
-            \ [file-path]({{#1735997907331017359979073323.gitlab_file_url#}})\n```diff\n\
-            ++ abc\n-- def\n```\n### 洞察\n- Insight 1\n- Insight 2\n### 问题\n- Issue\
-            \ 1\n- Issue 2\n### 建议\n- Suggestion 1\n- Suggestion 2\n</response-format>\n\
-            \n<rules>\n- 你只审查 code-to-review 部分的代码并提供反馈。样例如下:\n  <sample type=\"json\"\
-            >\n    {\n        \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\\
-            n+++ b/packages/core-api/src/analysis-api/analysis-api.service.ts\\n@@ -26,7 +26,7 @@ export class AnalysisApiService {\\\
-            n     private moduleRef: ModuleRef,\\n     private cacheService: CalculationCacheService,\\\
-            n     private measurementValueService: MeasurementValueService,\\n-  ) { }\\\
-            n+  ) {}\\n   getRegisterdActions() {\\n     return this.registedActions;\\\
-            n   }\\n\", // 以 unified diff 格式描述的文件内代码改动。\n        \"new_path\": \"\
-            packages/core-api/src/analysis-api/analysis-api.service.ts\", // 文件新名字。\n\
-                    \"old_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\"\
-            , // 文件旧名字。\n        \"a_mode\": \"100644\", // 文件旧的权限值。\n        \"b_mode\"\
-            : \"100644\", // 文件新的权限值。\n        \"new_file\": false, // 文件是否是新建的。\n\
-                    \"renamed_file\": false, // 文件是否被改名。\n        \"deleted_file\"\
-            : false, // 文件是否被删除。\n        \"generated_file\": false // 文件是否是自动生成的。\n\
-                }\n  </sample>\n- 参考但不审查 file-content 部分，这是文件改动后的完整内容。可能被省略。\n- 参考但不审查\
-            \ all-changes 部分，这是本次 Push 的所有 Commits 的改动。当改动过多时会被省略。\n- 你总是从代码、业务两方面进行审查。\n\
-            - 你总是按照 response-format 格式进行回复。保留文件路径的序号和URL连接。\n- 代码是否符合提交消息中的内容？\n-\
-            \ 如果有任何错误，请突出显示它们。\n- 不要突出显示小问题和细节。\n- 不必对自动生成的文件进行审查。\n- 你总是用语精练、准确。\n\
-            - 当无需审查时，你总是返回空字符串\"\"。\n- 请使用中文给出反馈。\n</rules>"
+          text: "You are a senior software engineer skilled at identifying issues in code and providing constructive improvement suggestions.\nYou are proficient in programming languages such as Nodejs, PHP, JavaScript, TypeScript, Python, Java, HTML/CSS, Flutter, Golang, C/C++, and related codebases.\n\n<response-format type=\"markdown\">\n## {{#1735997907331017359979073323.file_index#}}. [file-path]({{#1735997907331017359979073323.gitlab_file_url#}})\n```diff\n++ abc\n-- def\n```\n### Insights\n- Insight 1\n- Insight 2\n### Issues\n- Issue 1\n- Issue 2\n### Suggestions\n- Suggestion 1\n- Suggestion 2\n</response-format>\n\n<rules>\n- You only review the code-to-review section and provide feedback. Example:\n  <sample type=\"json\">\n    {\n      \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\n+++ b/packages/core-api/src/analysis-api/analysis-api.service.ts\\n@@ -26,7 +26,7 @@ export class AnalysisApiService {\\n    private moduleRef: ModuleRef,\\n    private cacheService: CalculationCacheService,\\n    private measurementValueService: MeasurementValueService,\\n- ) { }\\n+ ) {}\\n    getRegisterdActions() {\\n      return this.registedActions;\\n    }\\n\", // Describe file code changes in unified diff format.\n      \"new_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\", // New file name.\n      \"old_path\": \"packages/core-api/src/analysis-api/analysis-api.service.ts\", // Old file name.\n      \"a_mode\": \"100644\", // Old file permission value.\n      \"b_mode\": \"100644\", // New file permission value.\n      \"new_file\": false, // Whether the file is newly created.\n      \"renamed_file\": false, // Whether the file has been renamed.\n      \"deleted_file\": false, // Whether the file has been deleted.\n      \"generated_file\": false // Whether the file is auto-generated.\n    }\n  </sample>\n- Refer to but do not review the file-content section, which contains the complete content of the modified file. It may be omitted if the file is too long.\n- Refer to but do not review the all-changes section, which contains all changes in this Merge Request. It may be omitted if there are too many changes.\n- Always review from both code and business perspectives.\n- Always respond according to the response-format. Preserve file path indices and URL links.\n- Does the code match the content of the commit message?\n- Highlight any errors.\n- Do not highlight minor issues and details.\n- Do not review auto-generated files.\n- Always be concise and accurate.\n- Return an empty string \"\" when no review is needed.\n- Provide feedback in English.\n</rules>"
         - id: bf16301d-4510-4420-94d9-c32f35091008
           role: user
           text: '<repository>
@@ -2392,8 +2348,8 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        code: "function main({ raw }) {\n    // 解析 JSON 字符串\n    const parsed = JSON.parse(raw);\n\
-          \    \n    // 对 content 进行 Base64 解码\n    const decodedContent = atob(parsed.content);\n\
+        code: "function main({ raw }) {\n    // Decode JSON string\n    const parsed = JSON.parse(raw);\n\
+          \    \n    // Decode Base64\n    const decodedContent = atob(parsed.content);\n\
           \    \n    return {\n        content: decodedContent.length > 80000 ? 'omitted'\
           \ : decodedContent\n    };\n}"
         code_language: javascript
@@ -2491,7 +2447,7 @@ workflow:
           - text
           variable: output
         selected: false
-        title: 结束 3
+        title: End 3
         type: end
       height: 90
       id: '1735998423516'
@@ -2600,7 +2556,7 @@ workflow:
         code: "\nfunction main({raw, user_name, comments, before_hash, after_hash,\
           \ project_name,web_url, ref}) {\n    const subject = `[AI Code Review] ${project_name}\
           \ ${ref} ${after_hash}`\n    const greetings = `# AI Code Review Result\\\
-          n您好 ${user_name}, 以下是对您在 [${project_name}](${web_url}) ${ref} 推送的若干提交的代码审查结果。\\\
+          nHello ${user_name}, below is the code review result for several commits pushed to [${project_name}](${web_url}) on ${ref}.\\\
           n## Comments:\\n${comments}\\n------\\n`\n\n    const markdown = markdownToHtml(`${greetings}\\\
           n${raw.join('\\n------\\n')}`)\n    const footer = `<div class=\"footer\"\
           \ style=\"\n    text-align: right;\n    \">Powered by <a href=\"https://github.com/zgldh/dify-gitlab-mr-reviewer\"\
@@ -2765,7 +2721,7 @@ workflow:
         selected: false
         title: Send Mail
         tool_configurations: {}
-        tool_label: 发送邮件
+        tool_label: Send Mail
         tool_name: send_mail
         tool_parameters:
           email_content:
