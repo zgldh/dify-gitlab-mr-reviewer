@@ -86,7 +86,7 @@ Fill up the **URL** as `http://localhost:4195/hook?dify=<DIFY_URL>`
 
 Fill up the **Secret token** as `<DIFY_API_KEY>` (it will be masked as ***)
 
-Triggers should be `Merge request events` only.
+Triggers should be `Push events` and `Merge request events` only.
 
 Then click `Add webhook` to save the settings.
 
