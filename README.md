@@ -5,6 +5,7 @@ Dify GitLab MR Reviewer is a tool designed to automate the code review process f
 ## Features
 
 - **Automated Code Review**: Automatically reviews GitLab MRs and provides feedback.
+- **Code Review email for push**: Send email to the pusher when commits are pushed.
 - **Integration with Dify**: Utilizes the Dify workflow for advanced code analysis.
 - **Docker Trigger Support**: Easy deployment using Docker containers to trigger the workflow.
 - **Logging and Monitoring**: Detailed logging and monitoring to ensure robust operation.
@@ -92,7 +93,12 @@ Then click `Add webhook` to save the settings.
 
 ### 6. Done
 
-That's all settings. You can try to create a new merge request and see what the AI would say!
+That's all settings. You can try to create a new merge request, or push your commits, then let's see what the AI would say!
+
+## Troubleshooting
+
+Q: Why I don't receive the code review email?  
+A: You have to go to your GitLab account settings, the profile page, and enable the `Public Email` option.
 
 ## Contributing
 
