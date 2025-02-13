@@ -4,6 +4,8 @@
 REQUESTS_DIR="/app/requests"
 LOG_FILE="process_requests.log"
 TIMEOUT="${DIFY_TIMEOUT:-1800}"
+MAX_PAYLOAD_SIZE="${MAX_PAYLOAD_SIZE:-102400}" # 100KB default
+
 
 # Logging function
 log() {
@@ -21,13 +23,21 @@ process_requests() {
             
             log "INFO" "Processing file: $request_file"
             
-            # Read and parse the request
-            request_content=$(cat "$request_file")
-            body=$(echo "$request_content" | jq -r '.body')
-            auth_token=$(echo "$request_content" | jq -r '.headers."X-Gitlab-Token"')
-            dify_url=$(echo "$request_content" | jq -r '.headers.dify')
-            
-            # Transform the request
+        # Read and parse the request
+        request_content=$(cat "$request_file")
+        body=$(echo "$request_content" | jq -r '.body')
+        auth_token=$(echo "$request_content" | jq -r '.headers."X-Gitlab-Token"')
+        dify_url=$(echo "$request_content" | jq -r '.headers.dify')
+
+        # Check payload size
+        body_size=${#body}
+        if [[ $body_size -gt $MAX_PAYLOAD_SIZE ]]; then
+            log "ERROR" "Payload size exceeded for $request_file. Size: $body_size bytes, Max: $MAX_PAYLOAD_SIZE bytes"
+            rm "$request_file"
+            continue
+        fi
+        
+        # Transform the request
             payload=$(jq -c '{inputs: {payload: .|tostring}, response_mode: "blocking", user: "AiCodeReview"}' <<< "$body")
             
             # Send to Dify
