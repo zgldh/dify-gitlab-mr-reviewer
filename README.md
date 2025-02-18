@@ -14,7 +14,7 @@ Dify GitLab MR Reviewer is a tool designed to automate the code review process f
 
 Before you begin, ensure you have the following installed:
 
-- [GitLab](https://about.gitlab.com/) This reviewer can be applied to free GitLab instance. You need a personal access token to an account with access (Role `developer` at least) to the repository.
+- [GitLab](https://about.gitlab.com/) (**Version 17** or newer) This reviewer can be applied to free GitLab instance. You need a personal access token to an account with access (Role `developer` at least) to the repository.
 - [Dify](https://github.com/langgenius/dify) The AI workflow platform. You have to get the workflow URL and access token.
 - [Docker](https://www.docker.com/) To proxy the GitLab system hook requests to Dify
 
