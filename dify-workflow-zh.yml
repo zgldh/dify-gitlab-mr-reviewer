@@ -6,7 +6,7 @@ app:
   name: GitLab 代码审查助理
   use_icon_as_answer_icon: false
 kind: app
-version: 0.1.4
+version: 0.1.5
 workflow:
   conversation_variables: []
   environment_variables:
@@ -903,6 +903,10 @@ workflow:
         headers: ''
         method: get
         params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -939,6 +943,10 @@ workflow:
         headers: ''
         method: get
         params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1138,6 +1146,10 @@ workflow:
         iteration_id: '1734625888939'
         method: post
         params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1256,6 +1268,10 @@ workflow:
         headers: ''
         method: post
         params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1316,7 +1332,7 @@ workflow:
             - 参考但不审查 all-changes 部分，这是本次Merge Request 的所有改动。当改动过多时会被省略。\n- 你总是从代码、业务两方面进行审查。\n\
             - 你总是按照 response-format 格式进行回复\n- 代码是否符合提交消息中的内容？\n- 如果有任何错误，请突出显示它们。\n\
             - 不要突出显示小问题和细节。\n- 不必对自动生成的文件进行审查。\n- 你总是用语精练、准确。\n- 当无需审查时，你总是返回空字符串\"\
-            \"。\n- 请使用中文给出反馈。\n</rules>"
+            \"。\n- 你总是用中文给出反馈。\n</rules>"
         - id: bf16301d-4510-4420-94d9-c32f35091008
           role: user
           text: '<repository>
@@ -1444,6 +1460,10 @@ workflow:
         iteration_id: '1734694373584'
         method: get
         params: unidiff:1
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1546,6 +1566,10 @@ workflow:
         iteration_id: '1734694373584'
         method: get
         params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1628,6 +1652,10 @@ workflow:
         iteration_id: '1734625888939'
         method: put
         params: body:{{#1735661041621.result#}}
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1668,6 +1696,10 @@ workflow:
         iteration_id: '1734625888939'
         method: get
         params: ref:{{#17346946709900.head_commit_sha#}}
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -1780,6 +1812,10 @@ workflow:
         params: 'page:{{#1734625888939.item#}}
 
           per_page:1'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -2074,6 +2110,10 @@ workflow:
           to:{{#1735985486526.after_hash#}}
 
           unidiff:1'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -2218,12 +2258,10 @@ workflow:
           role: system
           text: "你是资深软件工程师，擅长发现代码中的问题并提供建设性的改进建议。\n你擅长 Nodejs, PHP, JavaScript, TypeScript,\
             \ Python, Java, HTML/CSS, Flutter, Golang, C/C++, C shape 等编程语言，与其相关的代码库。\n\
-            \n<response-format type=\"markdown\">\n## {{#1735997907331017359979073323.file_index#}}.\
-            \ [file-path]({{#1735997907331017359979073323.gitlab_file_url#}})\n```diff\n\
-            ++ abc\n-- def\n```\n### 洞察\n- Insight 1\n- Insight 2\n### 问题\n- Issue\
-            \ 1\n- Issue 2\n### 建议\n- Suggestion 1\n- Suggestion 2\n</response-format>\n\
-            \n<rules>\n- 你只审查 code-to-review 部分的代码并提供反馈。样例如下:\n  <sample type=\"json\"\
-            >\n    {\n        \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\\
+            \n<response-format type=\"markdown\">\n```\n### 洞察\n- Insight 1\n- Insight\
+            \ 2\n### 问题\n- Issue 1\n- Issue 2\n### 建议\n- Suggestion 1\n- Suggestion\
+            \ 2\n</response-format>\n\n<rules>\n- 你只审查 code-to-review 部分的代码并提供反馈。样例如下:\n\
+            \  <sample type=\"json\">\n    {\n        \"diff\": \"--- a/packages/core-api/src/analysis-api/analysis-api.service.ts\\\
             n+++ b/packages/core-api/src/analysis-api/analysis-api.service.ts\\n@@ -26,7 +26,7 @@ export class AnalysisApiService {\\\
             n     private moduleRef: ModuleRef,\\n     private cacheService: CalculationCacheService,\\\
             n     private measurementValueService: MeasurementValueService,\\n-  ) { }\\\
@@ -2237,9 +2275,9 @@ workflow:
             : false, // 文件是否被删除。\n        \"generated_file\": false // 文件是否是自动生成的。\n\
                 }\n  </sample>\n- 参考但不审查 file-content 部分，这是文件改动后的完整内容。可能被省略。\n- 参考但不审查\
             \ all-changes 部分，这是本次 Push 的所有 Commits 的改动。当改动过多时会被省略。\n- 你总是从代码、业务两方面进行审查。\n\
-            - 你总是按照 response-format 格式进行回复。保留文件路径的序号和URL连接。\n- 代码是否符合提交消息中的内容？\n-\
-            \ 如果有任何错误，请突出显示它们。\n- 不要突出显示小问题和细节。\n- 不必对自动生成的文件进行审查。\n- 你总是用语精练、准确。\n\
-            - 当无需审查时，你总是返回空字符串\"\"。\n- 请使用中文给出反馈。\n</rules>"
+            - 你总是按照 response-format 格式进行回复。\n- 代码是否符合提交消息中的内容？\n- 如果有任何错误，请突出显示它们。\n\
+            - 不要突出显示小问题和细节。\n- 不必对自动生成的文件进行审查。\n- 你总是用语精练、准确。\n- 当无需审查时，你总是返回空字符串\"\
+            \"。\n- 你总是用中文给出反馈。\n</rules>"
         - id: bf16301d-4510-4420-94d9-c32f35091008
           role: user
           text: '<repository>
@@ -2292,12 +2330,15 @@ workflow:
           \ obj.new_path,\n        old_path: obj.old_path,\n        encoded_path:\
           \ file_path,\n        need_get_file: (obj.new_file || obj.deleted_file)\
           \ ? 'no':'yes',\n        gitlab_file_url: gitlab_file_url,\n        file_index:\
-          \ index + 1\n    }\n}\n"
+          \ index + 1,\n        diff: obj.diff\n    }\n}\n"
         code_language: javascript
         desc: ''
         isInIteration: true
         iteration_id: '17359979073310'
         outputs:
+          diff:
+            children: null
+            type: string
           encoded_path:
             children: null
             type: string
@@ -2371,6 +2412,10 @@ workflow:
         iteration_id: '17359979073310'
         method: get
         params: ref:{{#1735985486526.after_hash#}}
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
         selected: false
         timeout:
           max_connect_timeout: 0
@@ -2432,8 +2477,11 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        code: "\nfunction main({raw}) {\n\n    return {\n        result: raw.replace(/^```(markdown)?\\\
-          s*\\n|```\\n?$/g, '')\n    }\n}\n"
+        code: "function main({ raw, fileIndex, filePath, gitlabFileUrl, diff }) {\n\
+          \  let trimmed = raw;\n  if (raw.startsWith(\"```\")) {\n    trimmed = raw.replace(/^```(markdown)?\\\
+          s*\\n|```\\n?$/g, \"\");\n  }\n  const result = `## ${fileIndex}. [${filePath}](${gitlabFileUrl})\n\
+          \\`\\`\\`diff\n${diff}\n\\`\\`\\`\n${trimmed}`;\n\n  return {\n    result:\
+          \ result,\n  };\n}\n"
         code_language: javascript
         desc: ''
         isInIteration: true
@@ -2443,14 +2491,30 @@ workflow:
             children: null
             type: string
         selected: false
-        title: Trim ```
+        title: Trim and compose
         type: code
         variables:
         - value_selector:
           - '1735997907331017359979073322'
           - text
           variable: raw
-      height: 54
+        - value_selector:
+          - '1735997907331017359979073323'
+          - file_index
+          variable: fileIndex
+        - value_selector:
+          - '1735997907331017359979073323'
+          - new_path
+          variable: filePath
+        - value_selector:
+          - '1735997907331017359979073323'
+          - gitlab_file_url
+          variable: gitlabFileUrl
+        - value_selector:
+          - '1735997907331017359979073323'
+          - diff
+          variable: diff
+      height: 52
       id: '17359979073310173599790733313'
       parentId: '17359979073310'
       position:
@@ -2605,9 +2669,10 @@ workflow:
           \ project_name,web_url, ref}) {\n    const subject = `[AI Code Review] ${project_name}\
           \ ${ref} ${after_hash}`\n    const greetings = `# AI Code Review Result\\\
           n您好 ${user_name}, 以下是对您在 [${project_name}](${web_url}) ${ref} 推送的若干提交的代码审查结果。\\\
-          n## Comments:\\n${comments}\\n------\\n`\n\n    const markdown = markdownToHtml(`${greetings}\\\
-          n${raw.join('\\n------\\n')}`)\n    const footer = `<div class=\"footer\"\
-          \ style=\"\n    text-align: right;\n    \">Powered by <a href=\"https://github.com/zgldh/dify-gitlab-mr-reviewer\"\
+          n## Comments:\\n${comments}`\n\n    const markdown = [\n        markdownToHtml(greetings),\n\
+          \        ...raw.map(item=>markdownToHtml(item))\n    ].join(markdownToHtml('\\\
+          n------\\n'))\n\n    const footer = `<div class=\"footer\" style=\"\n  \
+          \  text-align: right;\n    \">Powered by <a href=\"https://github.com/zgldh/dify-gitlab-mr-reviewer\"\
           \ target=\"_blank\">https://github.com/zgldh/dify-gitlab-mr-reviewer</a></div>`\n\
           \    const emailContent = `${styles}<div>${markdown}${footer}</div>`\n \
           \   return {\n        result: emailContent,\n        subject: subject\n\
