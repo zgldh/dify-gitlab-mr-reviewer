@@ -1957,8 +1957,9 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        code: "\nfunction main({raw}) {\n\n    return {\n        result: raw.replace(/^```(markdown)?\\\
-          s*\\n|```\\n?$/g, '')\n    }\n}\n"
+        code: "function main({ raw }) {\n  const processed = raw\n    .replace(/^```(markdown)?\\\
+          s*\\n|```\\n?$/g, '')\n    .replace(/<think>.*?<\\/think>/gs, ''); \n\n\
+          \  return {\n    result: processed\n  };\n}"
         code_language: javascript
         desc: ''
         isInIteration: true
@@ -2433,7 +2434,8 @@ workflow:
     - data:
         code: "function main({ raw, fileIndex, filePath, gitlabFileUrl, diff }) {\n\
           \  let trimmed = raw;\n  if (raw.startsWith(\"```\")) {\n    trimmed = raw.replace(/^```(markdown)?\\\
-          s*\\n|```\\n?$/g, \"\");\n  }\n  const result = `## ${fileIndex}. [${filePath}](${gitlabFileUrl})\n\
+          s*\\n|```\\n?$/g, \"\");\n  }\n  trimmed = trimmed.replace(/<think>.*?<\\\
+          /think>/gs, '');\n  const result = `## ${fileIndex}. [${filePath}](${gitlabFileUrl})\n\
           \\`\\`\\`diff\n${diff}\n\\`\\`\\`\n${trimmed}`;\n\n  return {\n    result:\
           \ result,\n  };\n}\n"
         code_language: javascript
